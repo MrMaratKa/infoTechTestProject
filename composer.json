@@ -14,10 +14,14 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.4.0",
+        "php": ">=8.0",
         "yiisoft/yii2": "~2.0.45",
         "yiisoft/yii2-bootstrap5": "~2.0.2",
-        "yiisoft/yii2-symfonymailer": "~2.0.3"
+        "yiisoft/yii2-symfonymailer": "~2.0.3",
+        "vlucas/phpdotenv": "^5.6",
+        "floor12/yii2-phone": "^2.2",
+        "yiisoft/yii2-jui": "^2.0",
+        "yiisoft/yii2-imagine": "^2.3"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -28,7 +32,8 @@
         "codeception/module-asserts": "^3.0 || ^1.1",
         "codeception/module-yii2": "^1.1",
         "codeception/module-filesystem": "^3.0 || ^2.0 || ^1.1",
-        "codeception/verify": "^3.0 || ^2.2"
+        "codeception/verify": "^3.0 || ^2.2",
+        "xiaklizrum/smspilot-client": "dev-master"
     },
     "config": {
         "allow-plugins": {

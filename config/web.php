@@ -1,5 +1,12 @@
 <?php
 
+use app\events\eventHandlers\AddNewBooksEventHandler;
+use app\models\activeRecords\Books;
+use app\models\activeRecords\Subscribes;
+use app\services\SmsPilotService;
+use yii\base\Event;
+use yii\di\Container;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -20,7 +27,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\activeRecords\User',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -48,13 +55,37 @@ $config = [
             'rules' => [
                 '' => 'site/index',
                 'login' => 'site/login',
-                'about' => 'site/about',
-                'contact' => 'site/contact',
 
-                '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                '<controller:\w+>' => '<controller>/index',
             ],
         ],
     ],
+    'container' => [
+        'singletons' => [
+            SmsPilotService::class => function (Container $container, $params, $config) {
+                return new SmsPilotService($_ENV['SMSPILOT_APIKEY']);
+            },
+            AddNewBooksEventHandler::class => function(Container $container) {
+                return new AddNewBooksEventHandler(
+                    $container->get(SmsPilotService::class),
+                    new Subscribes()
+                );
+            },
+        ]
+    ],
+    // Обработка публикации автором новой книги. Шлются SMS всем подписчикам данного автора
+    'on beforeRequest' => function() {
+        /** @var AddNewBooksEventHandler $handler */
+        $handler = Yii::$container->get(AddNewBooksEventHandler::class);
+
+        Event::on(
+            Books::class,
+            Books::EVENT_AFTER_INSERT,
+            [$handler, 'handle']
+        );
+    },
     'params' => $params,
 ];
 

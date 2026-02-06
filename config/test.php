@@ -30,7 +30,7 @@ return [
             'showScriptName' => true,
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\activeRecords\User',
         ],
         'request' => [
             'cookieValidationKey' => 'test',
