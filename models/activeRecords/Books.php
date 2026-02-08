@@ -28,8 +28,6 @@ use yii\web\UploadedFile;
  */
 class Books extends ActiveRecord
 {
-    public const SCENARIO_INSERT = 'insert';
-
     /** Событие на добавление новой книги */
     public const EVENT_AFTER_INSERT= 'addNewBookEvent';
 
@@ -63,13 +61,13 @@ class Books extends ActiveRecord
             [['description'], 'string'],
             [['isbn'], 'string', 'max' => 13],
             [['isbn'], 'match', 'pattern' => '/^(?:\d{9}[\dXx]|\d{13})$/'],
+            [['isbn'], 'unique'],
             [['name', 'img'], 'string', 'max' => 255],
             [['imageFile'], 'file',
-                'skipOnEmpty' => false,
+                'skipOnEmpty' => !$this->isNewRecord,
                 'extensions' => 'png, jpg, jpeg, gif, webp',
                 'maxSize' => 1024 * 1024 * 5,
                 'checkExtensionByMimeType' => false,
-                'on' => self::SCENARIO_INSERT
             ],
         ];
     }

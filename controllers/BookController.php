@@ -91,7 +91,6 @@ class BookController extends Controller
     public function actionCreate(): Response|string
     {
         $model = new Books();
-        $model->setScenario(Books::SCENARIO_INSERT);
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {

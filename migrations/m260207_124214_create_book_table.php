@@ -20,7 +20,7 @@ class m260207_124214_create_book_table extends Migration
                 'name' => $this->string()->notNull()->comment('Название книги'),
                 'release_date' => $this->date()->notNull()->comment('Год выпуска'),
                 'description' => $this->string(255)->notNull()->comment('Описание'),
-                'isbn' => $this->bigInteger()
+                'isbn' => $this->bigInteger()->unique()
                     ->check('isbn BETWEEN 1000000000000 AND 9999999999999')
                     ->notNull()
                     ->comment('Isbn'),
